@@ -1,0 +1,5 @@
+secret_key: 'tothinkistheprogrammersmantra'
+mysql_host: 'localhost'
+mysql_user: 'root'
+mysql_password: 'kumsainibai2022'
+mysql_db: 'crud'
