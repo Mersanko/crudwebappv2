@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>SDMS</title>
-  <link href="{{url_for('static',filename='css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" >
-  <link rel="shortcut icon" type="text/css" href="{{url_for('static',filename='msuiitlogo.png')}}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link href="{{url_for('static',filename='css/home.css')}}" rel="stylesheet" type="text/css" >
-</head>
+{% extends "base.html" %}
 
-<body>
+
+{% block navbar %}
       <nav class="navbar navbar-default">
         <div class="container-fluid">
           <div class="navbar-header"> 
@@ -24,7 +16,9 @@
               </ul>
         </div>
       </nav>
-    {% block body %}
+{% endblock %}
+
+{% block body %}
 
 
   <div class="container">
@@ -244,24 +238,6 @@
   </div>
 
    </table>
-   {% endblock %}
+{% endblock %}
 
 
-
-  </div> 
-   
-
-  <div class="well">
-  <h6><a href="https://twitter.com/mersan27" class="twitter-follow-button" data-show-count="false" target="_blank">Follow @mersan27</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></a>
-  <span class="pull-right"><a href="https://github.com/mersanko" target="_blank">Follow @mersanko <i style="font-size:24px;color:black" class="fa">&#xf09b;</i></a></span>
-  </h6>
-  </div>
-
-   
-
-</body>
-<script type="text/javascript" src="{{url_for('static',filename='js/jquery-3.2.1.min.js')}}"></script>
-<script type="text/javascript" src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
-
-
-</html>
