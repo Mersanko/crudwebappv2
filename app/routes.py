@@ -161,4 +161,17 @@ def updatecourse(courseNo):
 	else:
 		return redirect("/courses")
 
+@app.route('/search',methods=['GET','POST'])
+def search():
+	searchEntry = request.form['searchInput']
+	srch =  model1.student()
+	result = srch.search(searchEntry)
+	datacounts = 0
+	for r in result:
+		datacounts+=1
 
+	courses = model1.student.courses()
+	departments  = model1.student.departments()
+	colleges = model1.student.colleges()
+
+	return render_template('index.html',title="Student List",students=result,courses=courses,departments=departments,colleges=colleges,datacounts=datacounts)

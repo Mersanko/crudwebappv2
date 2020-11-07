@@ -111,4 +111,17 @@ class student():
 		cur = mysql.connection.cursor()
 		cur.execute("DELETE FROM students WHERE rawid=%s",(rawid,))
 		mysql.connection.commit()
-		
+	
+	@classmethod
+	def search(cls,searchInput):
+		cur = mysql.connection.cursor()
+		cur.execute("SET @search=%s",(searchInput,))
+
+		cur.execute("""SELECT * FROM(SELECT students.rawid,students.idno,students.firstName,students.lastName,students.age,students.gender,students.contactno,course.courseCode,students.yearLevel,department.departmentName,college.collegeCode 
+			FROM students,course,college,department WHERE students.course=course.courseNo AND students.department=department.departmentNo AND students.college=college.collegeNo) AS student 
+			WHERE idno LIKE CONCAT('%',@search,'%') or firstName LIKE CONCAT('%',@search,'%') or lastName  LIKE CONCAT('%',@search,'%') or age LIKE CONCAT('%',@search,'%') or
+					gender LIKE CONCAT('%',@search,'%') or contactno  LIKE CONCAT('%',@search,'%') or courseCode  LIKE CONCAT('%',@search,'%') or 
+					yearLevel  LIKE CONCAT('%',@search,'%') or departmentName  LIKE CONCAT('%',@search,'%') or collegeCode  LIKE CONCAT('%',@search,'%') """)
+		data = cur.fetchall()
+
+		return data
