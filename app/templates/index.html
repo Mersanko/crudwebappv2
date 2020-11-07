@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+
+{% block navbar %}
+<!-- Nav bar with brand logo-->
+<nav class="navbar">
+  <div class="nav-item pull-left">
+  <ul>
+      <li class="nav-item" style="font-size:20px"><a href="/" style="color:#ff5733"><strong><u>Student List</u></strong></a></li>
+      <li class="nav-item" style="font-size:20px"><a href="/courses" style="color:#850f13"><strong>Course List</strong></a></li>
+      <li class="nav-item" style="font-size:20px"><a href="/departments" style="color:#850f13"><strong>Department List</strong></a></li>
+      <li class="nav-item" style="font-size:20px"><a href="/colleges" style="color:#850f13"><strong>College List</strong></a></li>
+  </ul>
+  </div>
+</nav>
+{% endblock%}
+
+
+{% block body %}
+<br>
+<br>
+
+
+<div class="container">
+<div class="float-left">
+<h5>No of Students: {{ datacounts }}</h5>
+</div>
+<div class="float-right">  
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#addModal">Add Student</button>
+</div>
+<br>
+<br>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category,message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong> 
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<table class="table table-stripped">
+    <tr>
+      <th scope="col">ID no.</th>
+      <th scope="col">Name</th>
+      <th scope="col">Age</th>
+      <th scope="col">Gender</th>
+      <th scope="col">Contact no.</th>
+      <th scope="col">Course</th>
+      <th scope="col">Year Level</th>
+      <th scope="col">Department</th>
+      <th scope="col">College</th>
+      <th scope="col">Actions</th>
+    </tr>
+
+   {% for student in students %}
+    <tr>
+      <td>{{ student.1 }}</td>
+      <td>{{ student.2 }} {{ student.3 }} </td>
+      <td>{{ student.4 }}</td>
+      <td>{{ student.5 }}</td>
+      <td>{{ student.6 }}</td>
+
+      {% for course in courses %}
+      {% if course.0==student.7 %}
+      <td>{{ course.1 }}</td>
+      {% endif %}
+      {% endfor %}
+
+      <td>{{ student.8 }}</td>
+
+      {% for department in departments %}
+      {% if department.0 == student.9 %}
+      <td>{{ department.1 }}</td>
+      {% endif %}
+      {% endfor %}
+      
+     {% for college in colleges%}
+     {% if college.0 == student.10 %}
+      <td>{{ college.1 }}</td>
+    {% endif %}
+     {% endfor %}
+
+      <td>
+      	<a href="/update/{{student.0}}" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateModal{{student.0}}">Update</a><!--trigger button for update modal-->
+        <a href="/delete/{{student.0}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete </a>
+      </td>
+    </tr>
+
+    
+
+
+
+<div id="updateModal{{student.0}}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" style="text-align:left"><strong><i>Update Student Data with ID:{{ student.0 }}</i></strong></h4>
+          <button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <form action="{{url_for('update')}}" method="POST">
+            <div class="form-group">
+              <label><strong>First Name:</strong></label>
+              <input type="hidden" id="rawid" name="rawid" value="{{ student.0 }}">
+              <input type="hidden" id="idno" name="idno" value="{{ student.1 }}">
+              <input type="text" id="firstName"  name="firstName" class="form-control" value="{{ student.2 }}" autofocus required>
+            </div>
+            <div class="form-group">
+              <label><strong>Last Name:</strong></label>
+              <input type="text" id="lastName"  name="lastName" class="form-control" value="{{ student.3 }}" required>
+            </div>
+            <div class="form-group">
+              <label><strong>Age:</strong></label>
+              <input type="number" id="age" name="age" class="form-control" value="{{ student.4 }}" min="1" required>
+            </div>
+            <div class="form-group">
+              <label><strong>Gender:</strong></label><br>
+              {% if student.5|length==4 %}
+              <input type="radio" id="male" name="gender" value="male" checked>
+              <label for="male">Male</label>
+              <input type="radio" id="female" name="gender" value="female">
+              <label for="female">Female</label><br>
+              {% else %}
+              <input type="radio" id="male" name="gender" value="male" >
+              <label for="male">Male</label>
+              <input type="radio" id="female" name="gender" value="female" checked>
+              <label for="female">Female</label><br>
+              {% endif %}
+            </div>
+            <div class="form-group">
+              <label><strong>Contact Number:</strong></label>
+              <input type="text" id="contactno" name="contactno" class="form-control" value="{{ student.6 }}" required>
+            </div>
+            <div class="form-group">
+              <label><strong>Course:</strong></label>
+              <div class="input-group mb-3" > 
+                <select class="custom-select" id="course" name="course" required>
+                  {% for college in colleges %}
+                  <optgroup label="{{ college.2}}">
+                  {% for course in courses%}
+                  {% if course.4 == college.0 %}
+                  {% if course.0 == student.7 %}
+                  <option value="{{ course.0 }}" selected>{{ course.2 }}</option>
+                  {% elif course.0 != student.7 %}
+                  <option value="{{ course.0 }}">{{ course.2 }}</option>
+                  {% endif %}
+                  {% endif %}
+                  {% endfor %}
+                  </optgroup>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><strong>Year Level:</strong></label>
+              <input type="number" id="yearLevel" name="yearLevel" class="form-control" min="1" max="5" value="{{ student.8 }}" required>
+            </div>
+            <div class="form-group">
+              <br>
+              <button type="submit" class="btn btn-success">Save Changes</button>
+              <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
+     </div>
+  </div>
+</div>
+
+
+
+{% endfor %}
+
+
+<div id="addModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      	<div class="modal-header">
+      		<h4 class="modal-title" style="text-align:left"><strong><i>Add Student Data</i></strong></h4>
+      		<button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+        	<form action="{{url_for('insert')}}" method="POST">
+            <div class="form-group">
+              <label><strong>First Name:</strong></label>
+              <input type="text" id="firstName"  name="firstName" class="form-control" placeholder="Enter First Name" autofocus required>
+            </div>
+            <div class="form-group">
+              <label><strong>Last Name:</strong></label>
+              <input type="text" id="lastName"  name="lastName" class="form-control" placeholder="Enter Last Name" required>
+            </div>
+            <div class="form-group">
+              <label><strong>Age:</strong></label>
+              <input type="number" id="age" name="age" class="form-control" placeholder="Enter Age" min="1" required>
+            </div>
+            <div class="form-group">
+              <label><strong>Gender:</strong></label><br>
+              <input type="radio" id="male" name="gender" value="male" checked>
+              <label for="male">Male</label>
+              <input type="radio" id="female" name="gender" value="female">
+              <label for="female">Female</label><br>
+            </div>
+            <div class="form-group">
+              <label><strong>Contact Number:</strong></label>
+              <input type="text" id="contactno" name="contactno" class="form-control" placeholder="Enter Contact Number" required>
+            </div>
+            <div class="form-group">
+              <label><strong>Course:</strong></label>
+              <div class="input-group mb-3" > 
+                <select class="custom-select" id="course" name="course" required>
+                  <option disabled="" selected="">Select a Course</option>
+                  {% for college in colleges %}
+                  <optgroup label="{{ college.2}}">
+                  {% for course in courses%}
+                  {% if course.4 == college.0 %}
+                  <option value="{{ course.0 }}">{{ course.2 }}</option>
+                  {% endif %}
+                  {% endfor %}
+                  </optgroup>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label><strong>Year Level:</strong></label>
+              <input type="number" id="yearLevel" name="yearLevel" class="form-control" min="1" max="5" placeholder="Enter Year Level" required>
+            </div>
+            <div class="form-group">
+              <br>
+              <button type="submit" class="btn btn-success">Add Student</button>
+              <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+            </div>
+			    </form>
+		    </div>
+	   </div>
+  </div>
+</div>
+
+
+
+</table>
+</div>
+{% endblock %}

@@ -1,18 +1,19 @@
-from flask import Flask
-from flask_mysqldb import MySQL
-import yaml
+from flask import Flask,render_template, redirect, request,url_for,flash
+from flask_mysql_connector import MySQL
+from config import DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HOST, SECRET_KEY
+
 
 
 app = Flask(__name__)
 
+app.config['SECRET_KEY'] = SECRET_KEY
 
-db = yaml.load(open('config.yaml'))
-app.secret_key = db['secret_key']
-app.config['MYSQL_HOST'] = db['mysql_host']
-app.config['MYSQL_USER'] = db['mysql_user']
-app.config['MYSQL_PASSWORD'] = db['mysql_password']
-app.config['MYSQL_DB'] = db['mysql_db']
+app.config['MYSQL_USER'] = DB_USERNAME
+app.config['MYSQL_PASSWORD'] = DB_PASSWORD
+app.config['MYSQL_DATABASE'] = DB_NAME
+app.config['MYSQL_HOST'] = DB_HOST
 
 
 mysql = MySQL(app)
+
 from app import routes

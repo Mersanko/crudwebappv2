@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<link rel="shortcut icon" type="text/css" href="{{url_for('static',filename='msuiitlogo.png')}}"> 
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+	 <style>
+    .navbar{
+      background-color: #fff865;
+      }
+    table{
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+      }
+
+
+      tr{
+      background-color: #fff865;
+      color: #000000;
+      text-align: left;
+      font-size: 10px;
+      
+      }
+      th{
+        background-color: #850f13;
+        color: #fff865;
+        font-size: 12px;
+      }
+      ul{
+        list-style-type: none;
+        margin: 0;
+        padding: 2;
+        }
+      li{
+        display: inline;
+        padding-left:5px;
+        padding-right:5px;
+        }
+
+      .navbar{
+         border-bottom-style: solid;
+         border-bottom-color: #850f13;
+      }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-item pull-left">
+  <ul class="navtab">
+      <li class="nav-item" style="font-size:20px"><a href="/" style="color:#850f13"><strong>Student List</strong></a></li>
+      <li class="nav-item" style="font-size:20px"><a href="/courses" style="color:#ff5733"><strong><u>Course List</u></strong></a></li>
+      <li class="nav-item" style="font-size:20px"><a href="/departments" style="color:#850f13"><strong>Department List</strong></a></li>
+      <li class="nav-item" style="font-size:20px"><a href="/colleges" style="color:#850f13"><strong>College List</strong></a></li>
+  </ul>
+  </div>
+</nav>
+<br>
+<br>
+<br>
+
+<div class="container">
+<div class="float-left">
+<h5>No of Courses: {{ dataCounts }}</h5>
+</div>
+<div class="float-right">  
+<button class="btn btn-success btn-xs" data-toggle="modal" data-target="#addModalCourse">Add Course</button>
+</div>
+<br>
+<br>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  {% for category,message in messages %}
+  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <strong>{{ message }}</strong> 
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<table class="table table-stripped">
+    <tr>
+      <th scope="col">Course no.</th>
+      <th scope="col">Course Code</th>
+      <th scope="col">Course</th>
+      <th scope="col">Department</th>
+      <th scope="col">College</th>
+      <th scope="col">Actions</th>
+
+    </tr>
+
+   {% for course in courses %}
+    <tr>
+      <td>{{ course.0 }}</td>
+      <td>{{ course.1 }}</td>
+      <td>{{ course.2 }}</td>
+
+      {% for department in departments %}
+      {% if course.3==department.0 %}
+      <td>{{ department.1 }}</td>
+      {% endif %}
+      {% endfor %}
+
+      {% for college in colleges %}
+      {% if course.4 == college.0 %}
+      <td>{{ college.1 }}</td>
+      {% endif %}
+      {% endfor %}
+      <td>
+      	<a href="/updatecourse{{course.0}}" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#updateModalCourse{{course.0}}">Update</a>
+      	<!--trigger button for update modal-->
+        <a href="/deletecourse/{{course.0}}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete </a>
+      </td>
+    </tr>
+
+
+<div id="updateModalCourse{{course.0}}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      	<div class="modal-header">
+      		<h4 class="modal-title" style="text-align:left"><strong><i>Add Course Data</i></strong></h4>
+      		<button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+        	<form action="/updatecourse/{{course.0}}" method="POST">
+            <div class="form-group">
+              <label><strong>Course Code:</strong></label>
+              <input type="text" id="courseCode"  name="courseCode" class="form-control" value="{{course.1}}" autofocus required>
+            </div>
+            <div class="form-group">
+              <label><strong>Course Name:</strong></label>
+              <input type="text" id="courseName"  name="courseName" class="form-control" value="{{course.2}}" required>
+            </div>
+
+            <div class="form-group">
+              <br>
+              <button type="submit" class="btn btn-success">Save Changes</button>
+              <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+            </div>
+
+
+			</form>
+		    </div>
+	   </div>
+  </div>
+</div>
+
+
+
+    {% endfor%}
+
+<div id="addModalCourse" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      	<div class="modal-header">
+      		<h4 class="modal-title" style="text-align:left"><strong><i>Add Course Data</i></strong></h4>
+      		<button type="button" class="close pull-right" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+        	<form action="{{url_for('insertcourse')}}" method="POST">
+            <div class="form-group">
+              <label><strong>Course Code:</strong></label>
+              <input type="text" id="courseCode"  name="courseCode" class="form-control" placeholder="Enter Course Code" autofocus required>
+            </div>
+            <div class="form-group">
+              <label><strong>Course Name:</strong></label>
+              <input type="text" id="courseName"  name="courseName" class="form-control" placeholder="Enter Course Name" required>
+            </div>
+
+            <div class="form-group">
+              <label><strong>Department:</strong></label>
+              <div class="input-group mb-3" > 
+                <select class="custom-select" id="department" name="department" required>
+                  <option disabled="" selected="">Select a Department</option>
+                  {% for department in departments %}
+                  <option value="{{department.0}}">{{department.1}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <br>
+              <button type="submit" class="btn btn-success">Add Course</button>
+              <button type="button" class="btn btn-secondary float-right" data-dismiss="modal">Close</button>
+            </div>
+
+
+			</form>
+		    </div>
+	   </div>
+  </div>
+</div>
+
+
+
+</table>
+</div>	
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+</html>
