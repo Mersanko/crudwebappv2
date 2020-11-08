@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "studentlistbase.html" %}
 
 
 {% block navbar %}
@@ -6,14 +6,19 @@
 <nav class="navbar">
   <div class="nav-item pull-left">
   <ul>
+      
+      <a class="navbar-brand" href="/">
+        <img src="{{url_for('static',filename='msuiitlogo.png')}}" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+      </a>
+      
       <li class="nav-item" style="font-size:20px"><a href="/" style="color:#ff5733"><strong><u>Student List</u></strong></a></li>
       <li class="nav-item" style="font-size:20px"><a href="/courses" style="color:#850f13"><strong>Course List</strong></a></li>
       <li class="nav-item" style="font-size:20px"><a href="/departments" style="color:#850f13"><strong>Department List</strong></a></li>
       <li class="nav-item" style="font-size:20px"><a href="/colleges" style="color:#850f13"><strong>College List</strong></a></li>
   </ul>
   </div>
-  <form action="/search" method="POST" class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" name="searchInput" id="searchInput" placeholder="Search" aria-label="Search">
+  <form action="/studentsearch" method="POST" class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" name="searchInput" id="searchInput" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form>
 </nav>

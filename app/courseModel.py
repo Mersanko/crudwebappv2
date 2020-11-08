@@ -46,3 +46,17 @@ class course():
 		cur.execute("UPDATE course SET courseCode=%s, courseName=%s WHERE courseNo=%s",(self.courseCode,self.courseName,crs))
 		mysql.connection.commit()
 
+
+	def search(self,searchInput):
+		cur = mysql.connection.cursor()
+		cur.execute("SET @search=%s",(searchInput,))
+
+		cur.execute("""SELECT * FROM(SELECT course.courseNo,course.courseCode,course.courseName,department.departmentName,college.collegeCode
+					   FROM course,department,college
+					   WHERE course.department=department.departmentNo AND course.college=college.collegeNo) AS course
+					   WHERE courseNo LIKE CONCAT('%',@search,'%') or courseCode LIKE CONCAT('%',@search,'%')  or 
+					   		 courseName LIKE CONCAT('%',@search,'%')  or departmentName LIKE CONCAT('%',@search,'%')  or 
+					   		 collegeCode LIKE CONCAT('%',@search,'%')""")
+		data = cur.fetchall()
+
+		return data

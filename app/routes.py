@@ -161,17 +161,54 @@ def updatecourse(courseNo):
 	else:
 		return redirect("/courses")
 
-@app.route('/search',methods=['GET','POST'])
-def search():
+@app.route('/studentsearch',methods=['GET','POST'])
+def studentsearch():
 	searchEntry = request.form['searchInput']
 	srch =  model1.student()
 	result = srch.search(searchEntry)
-	datacounts = 0
-	for r in result:
-		datacounts+=1
-
 	courses = model1.student.courses()
 	departments  = model1.student.departments()
 	colleges = model1.student.colleges()
+	if len(result)>0:
+			return render_template('index.html',title="Student List",students=result,courses=courses,departments=departments,colleges=colleges,datacounts=len(result))
+	else:
+			flash('Your search - {} - did not match any data.!'.format(searchEntry),'dark')
+			return render_template('index.html',title="Student List",students=result,courses=courses,departments=departments,colleges=colleges,datacounts=0)
 
-	return render_template('index.html',title="Student List",students=result,courses=courses,departments=departments,colleges=colleges,datacounts=datacounts)
+@app.route('/coursesearch',methods=['GET','POST'])
+def coursesearch():
+	searchEntry = request.form['searchInput']
+	srch = model2.course()
+	result = srch.search(searchEntry)
+	departments  = model1.student.departments()
+	colleges = model1.student.colleges()
+	if len(result)>0:
+		return render_template('courses.html',title='Course List',courses=result,colleges=colleges,departments=departments,dataCounts=len(result))
+	else:
+		flash('Your search - {} - did not match any data.!'.format(searchEntry),'dark')
+		return render_template('courses.html',title='Course List',courses=result,colleges=colleges,departments=departments,dataCounts=0)
+	
+
+@app.route('/departmentsearch',methods=['GET','POST'])
+def departmentsearch():
+	searchEntry = request.form['searchInput']
+	srch = model3.department()
+	result = srch.search(searchEntry)
+	colleges = model1.student.colleges()
+	if len(result)>0:
+		return render_template('departments.html',title='Department List',departments=result,colleges=colleges,dataCounts=len(result))
+	else:
+		flash('Your search - {} - did not match any data.!'.format(searchEntry),'dark')
+		return render_template('departments.html',title='Department List',departments=result,colleges=colleges,dataCounts=0)
+		
+	
+@app.route('/collegesearch',methods=['GET','POST'])
+def collegesearch():
+	searchEntry = request.form['searchInput']
+	srch = model4.college()
+	result = srch.search(searchEntry)
+	if len(result)>0:
+		return render_template('colleges.html',title='College List',colleges=result,dataCounts=len(result))
+	else:
+		flash('Your search - {} - did not match any data.!'.format(searchEntry),'dark')
+		return render_template('colleges.html',title='College List',college=result,dataCounts=0)
