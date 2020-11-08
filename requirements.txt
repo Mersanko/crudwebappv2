@@ -1,0 +1,15 @@
+click==7.1.2
+Flask==1.1.2
+flask-mysql-connector==1.0.3
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+mysql-connector-python==8.0.22
+mysqlclient @ file:///C:/Users/63965/Desktop/ass2/app/venv/Scripts/mysqlclient-1.4.6-cp38-cp38-win32.whl
+numpy==1.19.3
+pandas==1.1.4
+protobuf==3.13.0
+python-dateutil==2.8.1
+pytz==2020.1
+six==1.15.0
+Werkzeug==1.0.1
