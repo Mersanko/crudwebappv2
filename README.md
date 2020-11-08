@@ -1,5 +1,6 @@
 # CRUD web application 
 - This web application is built using flask which is the micro-framework for web development in Python and mySQL for the database.
+##   
 ![crudwebapp](https://user-images.githubusercontent.com/60516646/98458600-6fa48f80-21cd-11eb-8926-17b7756b8cb2.png)
 ### Main Features:
 - Add data
