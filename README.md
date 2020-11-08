@@ -11,7 +11,7 @@
 ### Guides to run this program:
 - First, download the source code of this web application.
 - Second, make sure that you've already installed Python and mySQL in you computer.
-- Third, activate the virtual environment using the command line and change directory to `app\venv\Scripts` and use the command `activate.bat`
+- Third, activate the virtual environment using the command line and change directory to `app\venv\Scripts` and use the command `activate.bat` or just install the dependecies that can be found in `requirements.txt`
 - Fourth, import the `database.sql` in your mySQL server.
 - Lastly, run the server using the command `flask run`
 ##  
